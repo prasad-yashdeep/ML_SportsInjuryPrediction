@@ -22,6 +22,7 @@ from sklearn.metrics import precision_score
 from sklearn.metrics import plot_confusion_matrix
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import precision_recall_fscore_support
 
 
 play_df = pd.read_csv('Dataset/PlayList.csv')
@@ -38,10 +39,9 @@ problem3_df1 = pd.get_dummies(problem3_df, dummy_na=False)
 X = np.array(problem3_df1)
 
 res = RandomOverSampler(random_state=0, sampling_strategy={
-                        'Knee': 1000, 'Foot': 700, 'Ankle': 700, 'Heel': 500, 'Toes': 1000})
+                        'Knee': 480, 'Foot': 70, 'Ankle': 420, 'Heel': 30, 'Toes': 70})
 X_resampled, y_resampled = res.fit_resample(X, y)
-# print(X_resampled.shape)
-# print(y_resampled)
+
 
 # Logistic Regression Multiclass Classification
 
@@ -50,23 +50,44 @@ X_train, X_test, y_train, y_test = train_test_split(
 unique, counts = np.unique(y_test, return_counts=True)
 print(dict(zip(unique, counts)))
 print("Logistic Regression")
-new1 = LogisticRegression()
+new1 = LogisticRegression(max_iter=500)
 new1.fit(X_train, y_train)
-y_pred = new1.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-conf_matrix = confusion_matrix(y_test, y_pred)
+#y_pred = new1.predict(X_test)
+y_pred = new1.predict(X)
+#accuracy = accuracy_score(y_test, y_pred)
+accuracy = accuracy_score(y, y_pred)
+conf_matrix = confusion_matrix(y, y_pred)
 print('Accuracy: {}'.format(accuracy))
 print('Confusion Matrix: \n {}'.format(conf_matrix))
-plot_confusion_matrix(new1, X_test, y_test)
+plot_confusion_matrix(new1, X, y)
+
+
+print("Macro Values")
+arr = precision_recall_fscore_support(y, y_pred, average='macro')
+print("Precision")
+print(arr[0])
+print("Recall")
+print(arr[1])
+print("F Score")
+print(arr[2])
+
+print("Micro Values")
+arr = precision_recall_fscore_support(y, y_pred, average='micro')
+print("Precision")
+print(arr[0])
+print("Recall")
+print(arr[1])
+print("F Score")
+print(arr[2])
+
 
 n_classes = 5
 
 
-y_score = new1.predict_proba(X_test)
+y_score = new1.predict_proba(X)
 # print(y_score)
 
-y_test = label_binarize(
-    y_test, classes=['Ankle', 'Foot', 'Heel', 'Knee', 'Toes'])
+y_test = label_binarize(y, classes=['Ankle', 'Foot', 'Heel', 'Knee', 'Toes'])
 # Compute ROC curve and ROC area for each class
 
 
@@ -135,20 +156,41 @@ for train_index, test_index in skf.split(X_resampled, y_resampled):
     new = DecisionTreeClassifier(max_depth=8)
     new.fit(X_train, y_train)
 
-    y_pred = new.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    conf_matrix = confusion_matrix(y_test, y_pred)
+    y_pred = new.predict(X)
+    accuracy = accuracy_score(y, y_pred)
+    conf_matrix = confusion_matrix(y, y_pred)
     print("DecisionTree")
+    accuracy = accuracy_score(y, y_pred)
+    conf_matrix = confusion_matrix(y, y_pred)
     print('Accuracy: {}'.format(accuracy))
     print('Confusion Matrix: \n {}'.format(conf_matrix))
-    plot_confusion_matrix(new, X_test, y_test)
+    plot_confusion_matrix(new1, X, y)
+
+    print("Macro Values")
+    arr = precision_recall_fscore_support(y, y_pred, average='macro')
+    print("Precision")
+    print(arr[0])
+    print("Recall")
+    print(arr[1])
+    print("F Score")
+    print(arr[2])
+
+    print("Micro Values")
+    arr = precision_recall_fscore_support(y, y_pred, average='micro')
+    print("Precision")
+    print(arr[0])
+    print("Recall")
+    print(arr[1])
+    print("F Score")
+    print(arr[2])
+
     n_classes = 5
 
-    y_score = new.predict_proba(X_test)
+    y_score = new1.predict_proba(X)
     # print(y_score)
 
     y_test = label_binarize(
-        y_test, classes=['Ankle', 'Foot', 'Heel', 'Knee', 'Toes'])
+        y, classes=['Ankle', 'Foot', 'Heel', 'Knee', 'Toes'])
     # Compute ROC curve and ROC area for each class
 
     fpr = dict()
@@ -204,28 +246,48 @@ for train_index, test_index in skf.split(X_resampled, y_resampled):
     plt.legend(loc="lower right")
     plt.show()
 
+# MLP for Multiclass Problem
 
-# Neural Network/ MLP Multiclass Classifiaction
 
 X_train, X_test, y_train, y_test = train_test_split(
     X_resampled, y_resampled, test_size=0.2, random_state=21, shuffle=True)
-
 clf = MLPClassifier(random_state=1).fit(X_train, y_train)
-y_pred = clf.predict(X_test)
-print(clf.score(X_test, y_test))
-conf_matrix = confusion_matrix(y_test, y_pred)
+y_pred = clf.predict(X)
+
+
+accuracy = accuracy_score(y, y_pred)
+conf_matrix = confusion_matrix(y, y_pred)
+print('Accuracy: {}'.format(accuracy))
 print('Confusion Matrix: \n {}'.format(conf_matrix))
-plot_confusion_matrix(clf, X_test, y_test)
+plot_confusion_matrix(new1, X, y)
+
+
+print("Macro Values")
+arr = precision_recall_fscore_support(y, y_pred, average='macro')
+print("Precision")
+print(arr[0])
+print("Recall")
+print(arr[1])
+print("F Score")
+print(arr[2])
+
+print("Micro Values")
+arr = precision_recall_fscore_support(y, y_pred, average='micro')
+print("Precision")
+print(arr[0])
+print("Recall")
+print(arr[1])
+print("F Score")
+print(arr[2])
 
 
 n_classes = 5
 
 
-y_score = clf.predict_proba(X_test)
+y_score = new1.predict_proba(X)
 # print(y_score)
 
-y_test = label_binarize(
-    y_test, classes=['Ankle', 'Foot', 'Heel', 'Knee', 'Toes'])
+y_test = label_binarize(y, classes=['Ankle', 'Foot', 'Heel', 'Knee', 'Toes'])
 # Compute ROC curve and ROC area for each class
 
 
@@ -238,6 +300,7 @@ for i in range(n_classes):
 
 # Compute micro-average ROC curve and ROC area
 fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
+
 roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
 
 lw = 1
@@ -259,12 +322,12 @@ roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
 plt.figure()
 plt.plot(fpr["micro"], tpr["micro"],
          label='micro-average ROC curve (area = {0:0.2f})'
-         ''.format(roc_auc["micro"]),
+               ''.format(roc_auc["micro"]),
          color='deeppink', linestyle=':', linewidth=4)
 
 plt.plot(fpr["macro"], tpr["macro"],
          label='macro-average ROC curve (area = {0:0.2f})'
-         ''.format(roc_auc["macro"]),
+               ''.format(roc_auc["macro"]),
          color='navy', linestyle=':', linewidth=4)
 
 colors = cycle(['green', 'darkorange', 'cornflowerblue', 'red', 'yellow'])
