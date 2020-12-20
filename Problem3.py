@@ -186,7 +186,7 @@ for train_index, test_index in skf.split(X_resampled, y_resampled):
 
     n_classes = 5
 
-    y_score = new1.predict_proba(X)
+    y_score = new.predict_proba(X)
     # print(y_score)
 
     y_test = label_binarize(
@@ -284,7 +284,7 @@ print(arr[2])
 n_classes = 5
 
 
-y_score = new1.predict_proba(X)
+y_score = clf.predict_proba(X)
 # print(y_score)
 
 y_test = label_binarize(y, classes=['Ankle', 'Foot', 'Heel', 'Knee', 'Toes'])
