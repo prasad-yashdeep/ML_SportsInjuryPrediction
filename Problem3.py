@@ -1,3 +1,6 @@
+''' Multiclass Classifiaction after detection of Injury 
+We want to detect which body part has been affected .'''
+
 from sklearn.neural_network import MLPClassifier
 import numpy as np
 import matplotlib.pyplot as plt
@@ -52,9 +55,8 @@ print(dict(zip(unique, counts)))
 print("Logistic Regression")
 new1 = LogisticRegression(max_iter=500)
 new1.fit(X_train, y_train)
-#y_pred = new1.predict(X_test)
 y_pred = new1.predict(X)
-#accuracy = accuracy_score(y_test, y_pred)
+
 accuracy = accuracy_score(y, y_pred)
 conf_matrix = confusion_matrix(y, y_pred)
 print('Accuracy: {}'.format(accuracy))
@@ -85,8 +87,6 @@ n_classes = 5
 
 
 y_score = new1.predict_proba(X)
-# print(y_score)
-
 y_test = label_binarize(y, classes=['Ankle', 'Foot', 'Heel', 'Knee', 'Toes'])
 # Compute ROC curve and ROC area for each class
 
@@ -187,7 +187,6 @@ for train_index, test_index in skf.split(X_resampled, y_resampled):
     n_classes = 5
 
     y_score = new.predict_proba(X)
-    # print(y_score)
 
     y_test = label_binarize(
         y, classes=['Ankle', 'Foot', 'Heel', 'Knee', 'Toes'])
@@ -285,7 +284,7 @@ n_classes = 5
 
 
 y_score = clf.predict_proba(X)
-# print(y_score)
+
 
 y_test = label_binarize(y, classes=['Ankle', 'Foot', 'Heel', 'Knee', 'Toes'])
 # Compute ROC curve and ROC area for each class

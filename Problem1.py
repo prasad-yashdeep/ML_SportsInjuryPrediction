@@ -1,3 +1,7 @@
+'''Contains EDA and visulaization of the Dataset Along 
+with the Problem of binary classification of  wheter a Injury 
+has occurred or not'''
+
 from sklearn.metrics import plot_roc_curve
 from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
@@ -21,6 +25,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import scipy.stats as ss
 import itertools
+
+
+# EDA and Visualization
 
 play_df = pd.read_csv('Dataset/PlayList.csv')
 # lets start cleaning up and extracting information.
@@ -123,6 +130,8 @@ def visualize_game_features(game_df, rotation=90, add_labels=False, figsize=(10,
     plt.suptitle('Game-Level Exploration', fontsize=16)
     plt.show()
 
+# Cleaning of dataframes for better extraction of data
+
 
 def clean_weather(row):
     cloudy = ['Cloudy 50% change of rain', 'Hazy', 'Cloudy.', 'Overcast', 'Mostly Cloudy',
@@ -207,7 +216,7 @@ game_df_cleaned = play_df_cleaned[['GameID', 'StadiumType', 'FieldType', 'Weathe
                                    'Temperature']].drop_duplicates().reset_index().drop(columns=['index'])
 visualize_game_features(game_df_cleaned, rotation=0,
                         add_labels=True, figsize=(12, 16))
-# game_df_cleaned.head()
+
 
 player_data_df = play_df_cleaned[[
     'PlayerKey', 'RosterPosition', 'PlayerGamePlay', 'Position', 'PositionGroup']]
@@ -282,6 +291,10 @@ visualize_play(play_df_cleaned)
 injury_df = pd.read_csv('Dataset/InjuryRecord.csv')
 df1 = play_df_cleaned.drop_duplicates('GameID')
 
+# Pre - Processing Data using One hot encodign
+# Also twweking features and removing noise in order to
+# be fed into the model for the poupose of classification.
+
 game_injury_df = injury_df.set_index('GameID').join(
     df1.set_index('GameID'), how='outer', lsuffix='_left', rsuffix='_right')
 copy_game_injury = game_injury_df.copy()
@@ -310,7 +323,7 @@ frames = [game_injury_df1, game_injury_df2]
 features_df = pd.concat(frames)
 
 features_df = pd.get_dummies(features_df, dummy_na=False)
-# features_df
+
 
 df = pd.read_csv('Dataset/file1.csv')
 df.loc[(df.Temperature == -999), 'Temperature'] = 55
@@ -318,25 +331,25 @@ df.loc[(df.Temperature == -999), 'Temperature'] = 55
 # changing the playdate values
 df["PlayerDay"] = df["PlayerDay"].abs()
 features_df = df.set_index('GameID')
-# features_df
 
 
 y = features_df['Injury']
 X = features_df.drop(columns=['Injury'])
 y = np.array(y)
 X = np.array(X)
-# print(len(X[0]))
+
+
+# Oversampling in order to takle Imbalace class
 
 res = RandomOverSampler(random_state=0, sampling_strategy=0.5)
 X_resampled, y_resampled = res.fit_resample(X, y)
 dt_yresam = pd.DataFrame(y_resampled)
 dt_yresam.columns = ['T']
-# print(dt_yresam['T'].value_counts())
-#print(X_resampled, y_resampled)
+
 
 X_train, X_test, y_train, y_test = train_test_split(
     X_resampled, y_resampled, test_size=0.2, random_state=21, shuffle=True)
-#y_train, y_test = y[train_index], y[test_index]
+
 
 print("GaussianNB")
 new1 = GaussianNB()
@@ -357,19 +370,16 @@ y = features_df['Injury']
 X = features_df.drop(columns=['Injury'])
 y = np.array(y)
 X = np.array(X)
-# print(len(X[0]))
 
 
 res = RandomOverSampler(random_state=0, sampling_strategy=0.5)
 X_resampled, y_resampled = res.fit_resample(X, y)
 dt_yresam = pd.DataFrame(y_resampled)
 dt_yresam.columns = ['T']
-# print(dt_yresam['T'].value_counts())
-#print(X_resampled, y_resampled)
 
 X_train, X_test, y_train, y_test = train_test_split(
     X_resampled, y_resampled, test_size=0.2, random_state=21, shuffle=True)
-#y_train, y_test = y[train_index], y[test_index]
+
 
 print("Logistic Regression")
 new1 = LogisticRegression(max_iter=5000)
@@ -379,7 +389,7 @@ accuracy = accuracy_score(y_test, y_pred)
 conf_matrix = confusion_matrix(y_test, y_pred)
 print('Accuracy: {}'.format(accuracy))
 print('Confusion Matrix: \n {}'.format(conf_matrix))
-#plot_confusion_matrix(new1 , X_test, y_test)
+
 print('Precision')
 print(precision_score(y_test, y_pred))
 print('Racall')
@@ -392,7 +402,6 @@ X = features_df.drop(columns=['Injury'])
 y = np.array(y)
 X = np.array(X)
 X = StandardScaler().fit_transform(X)
-# print(X.shape)
 skf = StratifiedKFold(n_splits=2)
 res = RandomOverSampler(random_state=0)
 X_resampled, y_resampled = res.fit_resample(X, y)
@@ -417,6 +426,9 @@ for train_index, test_index in skf.split(X_resampled, y_resampled):
     print(recall_score(y_test, y_pred))
     plot_roc_curve(new, X_test, y_test)
 
+
+# Runnign XGBoost for Binary Classification with customn attributes
+# for best results
 
 model = xgb.XGBClassifier(max_depth=3,
                           learning_rate=0.1,
@@ -444,8 +456,6 @@ res = RandomOverSampler(random_state=0, sampling_strategy=0.5)
 X_resampled, y_resampled = res.fit_resample(X, y)
 dt_yresam = pd.DataFrame(y_resampled)
 dt_yresam.columns = ['T']
-# print(dt_yresam['T'].value_counts())
-# print(X_resampled.shape,y_resampled.shape)
 X_train, X_test, y_train, y_test = train_test_split(
     X_resampled, y_resampled, test_size=0.2, random_state=42, shuffle=True)
 

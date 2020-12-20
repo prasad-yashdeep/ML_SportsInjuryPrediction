@@ -1,3 +1,7 @@
+'''Regreession Problem Focussing Particularly on the rest that must be 
+provided to a player after an Injury dependign upon the severity of the 
+Injury'''
+
 from sklearn.pipeline import make_pipeline
 from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor
@@ -40,16 +44,18 @@ features_df1 = df.set_index('GameID')
 
 y = features_df1['Injury']
 X = features_df1.drop(columns=['Injury'])
-# print(X.shape)
+
+'''Resampling the Injury data set for better Pridiction in the large sized 
+dataset'''
+
 res = RandomOverSampler(random_state=0, sampling_strategy={
                         1: 2900, 2: 3900, 3: 800, 4: 2900})
 X_resampled, y_resampled = res.fit_resample(X, y)
 dt_yresam = pd.DataFrame(y_resampled)
 dt_yresam.columns = ['T']
-# print(dt_yresam['T'].value_counts())
-#sns.countplot(x='T',data=dt_yresam, palette='hls')
+
 dt_yresam.sample(frac=1)
-# print(X_resampled.shape)
+
 
 lis1 = []
 for i in y_resampled:
@@ -65,16 +71,16 @@ for i in y_resampled:
         lis1.append(random.randint(29, 42))
 
 lis1 = np.array(lis1)
-# print(lis1)
+
 
 X_train, X_test, y_train, y_test = train_test_split(
     X_resampled, lis1, test_size=0.2, random_state=42, shuffle=True)
 reg = LinearRegression(normalize=True).fit(X_train, y_train)
 y_pred = reg.predict(X_test)
-# print(len(y_pred))
+
 for i in range(len(y_pred)):
     y_pred[i] = int(round(y_pred[i]))
-# y_pred
+
 
 print("linear Regression")
 print(mean_squared_error(y_test, y_pred))
