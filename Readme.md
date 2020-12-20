@@ -2,10 +2,10 @@
 
 # Sports Injury Prediction using Machine Learning Techniques
 
-##Predicting injury beforehand would be a huge help to the players, ultimately revolutionising the sports industry.Knowing the resting period in advance, would even help teams strategize in a better manner for future tournaments.We also aim to tell the players in advance about the body part more likely to be injured so that the players can take prior measures in order to prevent those injuries.
+Predicting injury beforehand would be a huge help to the players, ultimately revolutionising the sports industry.Knowing the resting period in advance, would even help teams strategize in a better manner for future tournaments.We also aim to tell the players in advance about the body part more likely to be injured so that the players can take prior measures in order to prevent those injuries.
 
-#Data Pre Processing Techniques-:
-##Non-numeric data of certain features were converted to binary data for effective model training.
+Data Pre Processing Techniques-:
+Non-numeric data of certain features were converted to binary data for effective model training.
 ## We joined injury data with play data using different joining techniques to increase the number of attributes in our final dataset.
 
 ## We oversampled the data in order to increase the instances of injuries.This will help us to find the number of days of rest and the body part more likely to get injured in an occurrence of injury.
@@ -17,11 +17,11 @@
 ## Some play days were negative due to some erroneous data so their absolute values were taken as play days can never be negative.
 
 
-#Problem 1-:In this problem we perfromed binary classification to predict whether the player suffered from injury or not based on uncorrelated attributes like Stadium Type,Field Type,Weather,etc.We used Gaussian Naive Bayes,Logistic Regression,Decision Tree and XGBoost for this task.To implement this we run problem1.py using the below command.
+Problem 1-:In this problem we perfromed binary classification to predict whether the player suffered from injury or not based on uncorrelated attributes like Stadium Type,Field Type,Weather,etc.We used Gaussian Naive Bayes,Logistic Regression,Decision Tree and XGBoost for this task.To implement this we run problem1.py using the below command.
 
-#Problem 2-:In this problem we performed Regression to find out the number of days of rest needed by the player in occurence of an injury.We performed Linear Regression,Support Vector Machine,Random Forest Regressor to perfrom this task.To implement this we run problem2.py using the below command.
+Problem 2-:In this problem we performed Regression to find out the number of days of rest needed by the player in occurence of an injury.We performed Linear Regression,Support Vector Machine,Random Forest Regressor to perfrom this task.To implement this we run problem2.py using the below command.
 
-#Problem 3-:In this problem,we predict the body part most likely to be injured based on other attributes.We performed Logistic Regression,Decision Tree,Multi Layer Perceptron to perfrom this task.To implement this we run problem3.py using the below command.
+Problem 3-:In this problem,we predict the body part most likely to be injured based on other attributes.We performed Logistic Regression,Decision Tree,Multi Layer Perceptron to perfrom this task.To implement this we run problem3.py using the below command.
 
 
 
